@@ -11,7 +11,7 @@
     <h1>Posts</h1>
     {% for post in posts %}
     <article>
-      <time>{{ post.published_date }}</time>
+      <time>published: {{ post.published_date }}</time>
       <h2><a href="">{{ post.title }}</a></h2>
       <p>{{ post.text }}</p>
     </article>
