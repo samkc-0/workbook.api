@@ -70,9 +70,10 @@ class DotProductAPITestCase(APITestCase):
         """Ensure unauthenticated users can access dotproduct problems"""
         response = self.client.get(self.dotproduct_problems_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertGreaterEqual(len(response.data), 25)  # Ensure at least 25 exist
-        self.assertEqual(response.data[0]["question"]["blanks"][0]["keys"], "15")
-        self.assertEqual(response.data[0]["id"], 1)
+        self.assertGreaterEqual(len(response.data), 24)  # Ensure at least 24 exist
+        self.assertEqual(response.data[0]["answer"][0]["keys"], "1")
+        self.assertEqual(response.data[0]["answer"][0]["value"], "1_")
+        self.assertEqual(response.data[0]["id"], 0)
 
     def test_get_dotproduct_problem_no_auth(self):
         """Ensure unauthenticated users can retrieve a single problem"""

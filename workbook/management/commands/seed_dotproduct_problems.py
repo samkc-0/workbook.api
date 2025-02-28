@@ -1,688 +1,314 @@
+from copy import deepcopy
 from django.core.management.base import BaseCommand
 from django.db import connection
 from workbook.models import DotProductProblem
 
+
 data = [
     {
-        "left": {
-            "data": [[3]],
-            "rows": 1,
-            "columns": 1,
-            "name": "b",
+        "id": 0,
+        "question": {
+            "left": {
+                "data": [[3]],
+                "rows": 1,
+                "columns": 1,
+                "name": "b",
+            },
+            "top": {
+                "data": [[5]],
+                "rows": 1,
+                "columns": 1,
+                "name": "a",
+            },
+            "product": {
+                "data": [[""]],
+                "rows": 1,
+                "columns": 1,
+                "name": "a·b",
+            },
         },
-        "top": {
-            "data": [[5]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[15]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "15"}
+        "answer": [
+            {
+                "matrix": "product",
+                "row": 0,
+                "column": 0,
+                "key": "1",
+                "value": "1_",
+            },
+            {
+                "matrix": "product",
+                "row": 0,
+                "column": 0,
+                "key": "5",
+                "value": "15",
+            },
         ],
-        "answers": ["15"],
     },
     {
-        "left": {
-            "data": [[2]],
-            "rows": 1,
-            "columns": 1,
-            "name": "b",
+        "id": 1,
+        "question": {
+            "left": {
+                "data": [[2]],
+                "rows": 1,
+                "columns": 1,
+                "name": "b",
+            },
+            "top": {
+                "data": [[4]],
+                "rows": 1,
+                "columns": 1,
+                "name": "a",
+            },
+            "product": {
+                "data": [[""]],
+                "rows": 1,
+                "columns": 1,
+                "name": "a·b",
+            },
         },
-        "top": {
-            "data": [[4]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[8]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "8"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "8", "value": "8"}
         ],
-        "answers": ["8"],
     },
     {
-        "left": {
-            "data": [[2]],
-            "rows": 1,
-            "columns": 1,
-            "name": "b",
+        "id": 2,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 1, "data": [[2]]},
+            "top": {"name": "a", "rows": 1, "columns": 1, "data": [[-3]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [[-3]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[-6]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "-6"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "-", "value": "-_"},
+            {"matrix": "product", "row": 0, "column": 0, "key": "6", "value": "-6"},
         ],
-        "answers": ["-6"],
     },
     {
-        "left": {
-            "data": [[2]],
-            "rows": 1,
-            "columns": 1,
-            "name": "b",
+        "id": 3,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 1, "data": [[2]]},
+            "top": {"name": "a", "rows": 1, "columns": 1, "data": [[3]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [[3]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[6]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "6"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "6", "value": "6"}
         ],
-        "answers": ["6"],
     },
     {
-        "left": {
-            "data": [[-3]],
-            "rows": 1,
-            "columns": 1,
-            "name": "b",
+        "id": 4,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[1, 2]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[1], [1]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [[-3]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[9]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "9"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "3", "value": "3"}
         ],
-        "answers": ["9"],
     },
     {
-        "left": {
-            "data": [
-                [1, 2],
-            ],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 5,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[1, 2]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[1], [2]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [
-                [1],
-                [1],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [
-                [3],
-            ],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "3"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "5", "value": "5"}
         ],
-        "answers": ["3"],
     },
     {
-        "left": {
-            "data": [
-                [1, 2],
-            ],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 6,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[1, 3]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[4], [1]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [
-                [1],
-                [2],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [
-                [5],
-            ],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "5"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "7", "value": "7"}
         ],
-        "answers": ["5"],
     },
     {
-        "left": {
-            "data": [[1, 3]],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 7,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[1, -1]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[4], [1]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [
-                [4],
-                [1],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [
-                [7],
-            ],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "7"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "3", "value": "3"}
         ],
-        "answers": ["7"],
     },
     {
-        "left": {
-            "data": [[1, -1]],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 8,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[0, -1]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[4], [1]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [
-                [4],
-                [1],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[3]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "3"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "-", "value": "-_"},
+            {"matrix": "product", "row": 0, "column": 0, "key": "1", "value": "-1"},
         ],
-        "answers": ["3"],
     },
     {
-        "left": {
-            "data": [[0, -1]],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 9,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[0, -3]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[-4], [2]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [
-                [4],
-                [1],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[-1]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "-1"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "-", "value": "-_"},
+            {"matrix": "product", "row": 0, "column": 0, "key": "6", "value": "-6"},
         ],
-        "answers": ["-1"],
     },
     {
-        "left": {
-            "data": [[0, -3]],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 10,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[0, -3]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[-4], [0]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [
-                [-4],
-                [2],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[-6]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "-6"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "0", "value": "0"}
         ],
-        "answers": ["-6"],
     },
     {
-        "left": {
-            "data": [
-                [0, -3],
-            ],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 11,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[1, ""]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[2], [3]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[5]]},
         },
-        "top": {
-            "data": [
-                [-4],
-                [0],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[0]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "0"}
-        ],
-        "answers": ["0"],
+        "answer": [{"matrix": "left", "row": 0, "column": 1, "key": "1", "value": "1"}],
     },
     {
-        "left": {
-            "data": [
-                [1, 1],
-            ],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 12,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[1, ""]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[2], [3]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[2]]},
         },
-        "top": {
-            "data": [
-                [2],
-                [3],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[5]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "left", "row": 0, "column": 1, "symbol": "", "keys": "1"}
-        ],
-        "answers": ["1"],
+        "answer": [{"matrix": "left", "row": 0, "column": 1, "key": "0", "value": "0"}],
     },
     {
-        "left": {
-            "data": [[1, 0]],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 13,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[1, ""]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[4], [3]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[1]]},
         },
-        "top": {
-            "data": [
-                [2],
-                [3],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[2]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "left", "row": 0, "column": 1, "symbol": "", "keys": "0"}
+        "answer": [
+            {"matrix": "left", "row": 0, "column": 1, "key": "-", "value": "-_"},
+            {"matrix": "left", "row": 0, "column": 1, "key": "1", "value": "-1"},
         ],
-        "answers": ["0"],
     },
     {
-        "left": {
-            "data": [[1, -1]],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 14,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 2, "data": [[1, ""]]},
+            "top": {"name": "a", "rows": 2, "columns": 1, "data": [[2], [3]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[8]]},
         },
-        "top": {
-            "data": [
-                [4],
-                [3],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[1]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "left", "row": 0, "column": 1, "symbol": "", "keys": "-1"}
-        ],
-        "answers": ["-1"],
+        "answer": [{"matrix": "left", "row": 0, "column": 1, "key": "2", "value": "2"}],
     },
     {
-        "left": {
-            "data": [[1, 2]],
-            "rows": 1,
-            "columns": 2,
-            "name": "b",
+        "id": 15,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 3, "data": [[1, 1, 1]]},
+            "top": {"name": "a", "rows": 3, "columns": 1, "data": [[1], [2], [3]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [
-                [2],
-                [3],
-            ],
-            "rows": 2,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[8]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "left", "row": 0, "column": 1, "symbol": "", "keys": "2"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "6", "value": "6"}
         ],
-        "answers": ["2"],
     },
     {
-        "left": {
-            "data": [[1, 1, 1]],
-            "rows": 1,
-            "columns": 3,
-            "name": "b",
+        "id": 16,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 3, "data": [[1, 0, -1]]},
+            "top": {"name": "a", "rows": 3, "columns": 1, "data": [[4], [9], [3]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [
-                [1],
-                [2],
-                [3],
-            ],
-            "rows": 3,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[6]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "6"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "1", "value": "1"}
         ],
-        "answers": ["6"],
     },
     {
-        "left": {
-            "data": [[1, 0, -1]],
-            "rows": 1,
-            "columns": 3,
-            "name": "b",
+        "id": 17,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 3, "data": [[1, 0, -1]]},
+            "top": {"name": "a", "rows": 3, "columns": 1, "data": [[0], [1], [0]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[""]]},
         },
-        "top": {
-            "data": [
-                [4],
-                [9],
-                [3],
-            ],
-            "rows": 3,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[1]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "1"}
+        "answer": [
+            {"matrix": "product", "row": 0, "column": 0, "key": "0", "value": "0"}
         ],
-        "answers": ["1"],
     },
     {
-        "left": {
-            "data": [[1, 0, -1]],
-            "rows": 1,
-            "columns": 3,
-            "name": "b",
+        "id": 18,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 3, "data": [[1, 0, ""]]},
+            "top": {"name": "a", "rows": 3, "columns": 1, "data": [[8], [4], [5]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[3]]},
         },
-        "top": {
-            "data": [
-                [0],
-                [1],
-                [0],
-            ],
-            "rows": 3,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[0]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "product", "row": 0, "column": 0, "symbol": "", "keys": "0"}
+        "answer": [
+            {"matrix": "left", "row": 0, "column": 2, "key": "-", "value": "-_"},
+            {"matrix": "left", "row": 0, "column": 2, "key": "1", "value": "-1"},
         ],
-        "answers": ["0"],
     },
     {
-        "left": {
-            "data": [[1, 0, -1]],
-            "rows": 1,
-            "columns": 3,
-            "name": "b",
+        "id": 19,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 3, "data": [["", 1, 0]]},
+            "top": {"name": "a", "rows": 3, "columns": 1, "data": [[4], [2], [9]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[6]]},
         },
-        "top": {
-            "data": [
-                [8],
-                [4],
-                [5],
-            ],
-            "rows": 3,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[3]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "left", "row": 0, "column": 2, "symbol": "", "keys": "-1"}
-        ],
-        "answers": ["-1"],
+        "answer": [{"matrix": "left", "row": 0, "column": 0, "key": "1", "value": "1"}],
     },
     {
-        "left": {
-            "data": [[1, 1, 0]],
-            "rows": 1,
-            "columns": 3,
-            "name": "b",
+        "id": 20,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 3, "data": [["", 1, 0]]},
+            "top": {"name": "a", "rows": 3, "columns": 1, "data": [[4], [2], [9]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[-2]]},
         },
-        "top": {
-            "data": [
-                [4],
-                [2],
-                [9],
-            ],
-            "rows": 3,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[6]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "left", "row": 0, "column": 0, "symbol": "", "keys": "1"}
+        "answer": [
+            {"matrix": "left", "row": 0, "column": 0, "key": "-", "value": "-_"},
+            {"matrix": "left", "row": 0, "column": 0, "key": "1", "value": "-1"},
         ],
-        "answers": ["1"],
     },
     {
-        "left": {
-            "data": [[-1, 1, 0]],
-            "rows": 1,
-            "columns": 3,
-            "name": "b",
+        "id": 21,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 3, "data": [[3, 1, -2]]},
+            "top": {"name": "a", "rows": 3, "columns": 1, "data": [[1], [1], [""]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[6]]},
         },
-        "top": {
-            "data": [
-                [4],
-                [2],
-                [9],
-            ],
-            "rows": 3,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[-2]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "left", "row": 0, "column": 0, "symbol": "", "keys": "-1"}
+        "answer": [
+            {"matrix": "top", "row": 2, "column": 0, "key": "-", "value": "-_"},
+            {"matrix": "top", "row": 2, "column": 0, "key": "1", "value": "-1"},
         ],
-        "answers": ["-1"],
     },
     {
-        "left": {
-            "data": [[3, 1, -2]],
-            "rows": 1,
-            "columns": 3,
-            "name": "b",
+        "id": 22,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 3, "data": [[3, 1, -2]]},
+            "top": {"name": "a", "rows": 3, "columns": 1, "data": [[1], [4], [""]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[7]]},
         },
-        "top": {
-            "data": [
-                [1],
-                [1],
-                [-1],
-            ],
-            "rows": 3,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[6]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "top", "row": 2, "column": 0, "symbol": "", "keys": "-1"}
-        ],
-        "answers": ["-1"],
+        "answer": [{"matrix": "top", "row": 2, "column": 0, "key": "0", "value": "0"}],
     },
     {
-        "left": {
-            "data": [[3, 1, -2]],
-            "rows": 1,
-            "columns": 3,
-            "name": "b",
+        "id": 23,
+        "question": {
+            "left": {"name": "b", "rows": 1, "columns": 3, "data": [[2, "", -9]]},
+            "top": {"name": "a", "rows": 3, "columns": 1, "data": [[1], [3], [0]]},
+            "product": {"name": "a·b", "rows": 1, "columns": 1, "data": [[-1]]},
         },
-        "top": {
-            "data": [
-                [1],
-                [4],
-                [0],
-            ],
-            "rows": 3,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[7]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [{"matrix": "top", "row": 2, "column": 0, "symbol": "", "keys": "0"}],
-        "answers": ["0"],
-    },
-    {
-        "left": {
-            "data": [[2, -1, -9]],
-            "rows": 1,
-            "columns": 3,
-            "name": "b",
-        },
-        "top": {
-            "data": [
-                [1],
-                [3],
-                [0],
-            ],
-            "rows": 3,
-            "columns": 1,
-            "name": "a",
-        },
-        "product": {
-            "data": [[-1]],
-            "rows": 1,
-            "columns": 1,
-            "name": "a·b",
-        },
-        "blanks": [
-            {"matrix": "left", "row": 0, "column": 1, "symbol": "", "keys": "-1"}
+        "answer": [
+            {"matrix": "left", "row": 0, "column": 1, "key": "-", "value": "-_"},
+            {"matrix": "left", "row": 0, "column": 1, "key": "1", "value": "-1"},
         ],
-        "answers": ["-1"],
     },
 ]
 
@@ -690,43 +316,70 @@ data = [
 def test_data(item) -> bool:
     import numpy as np
 
-    left = item["left"]
-    top = item["top"]
-    product = item["product"]
-    blanks = item["blanks"]
-    answers = item["answers"]
+    question = item["question"]
+    test_subject = deepcopy(question)
+
+    def is_number(s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
+
+    def do_substition(blank):
+        matrix = blank["matrix"]
+        row = blank["row"]
+        column = blank["column"]
+        try:
+            value = float(blank["value"])
+        except ValueError:
+            value = blank["value"]
+            pass
+        test_subject[matrix]["data"][row][column] = value
+
+    answer = item["answer"]
+    for sub in answer:
+        print(sub)
+        do_substition(sub)
+
+    left = test_subject["left"]
+    top = test_subject["top"]
+    product = test_subject["product"]
+
     L, T, P = np.array(left["data"]), np.array(top["data"]), np.array(product["data"])
     print(f"testing problem: {L} @ {T} = {P}")
     assert L.shape == (left["rows"], left["columns"]), f"{L[0]}, {L.shape}"
     assert T.shape == (top["rows"], top["columns"]), f"{T[0]}, {T.shape}"
     assert P.shape == (product["rows"], product["columns"]), f"{P[0]}, {P.shape}"
     assert L @ T == P, f"{L} @ {T} = {L @ T} = {P}?"
-    for blank, answer in zip(blanks, answers):
-        matrix_key = blank["matrix"]
-        i = blank["row"]
-        j = blank["column"]
-        blanked = item[matrix_key]["data"][i][j]
-        print(blanked, i, j)
-        assert float(blanked) == float(answer), f"{blanked} is not {answer}"
-        assert blank["keys"] == answer
 
 
 class Command(BaseCommand):
     MODE_REFRESH = "refresh"
     MODE_CLEAR = "clear"
-    help = "Seed the BasicProblem table with 25 random problems."
+    help = "Seed the DotProduct table with 25 prepared problems."
 
     def handle(self, *args, **kwargs):
-        # delete existing questions
+        # Step 1: Delete all existing records
+        print("Clearing existing problems...")
+        DotProductProblem.objects.all().delete()
+
+        # Step 2: Reset auto-increment
         with connection.cursor() as cursor:
             cursor.execute(
                 "DELETE FROM sqlite_sequence WHERE name='workbook_dotproductproblem';"
             )
+
         self.stdout.write("Seeding new problems...")
+
+        # Step 3: Insert new records
         for i, item in enumerate(data):
-            print(f"problem #{i}")
+            print(f"problem #{item['id']}")
             test_data(item)
-            DotProductProblem.objects.create(question=item, answer=item["answers"])
+            DotProductProblem.objects.create(
+                id=item["id"], question=item["question"], answer=item["answer"]
+            )
+            print(f"Inserted problem with id={item['id']}")
 
         self.stdout.write(
             self.style.SUCCESS(
